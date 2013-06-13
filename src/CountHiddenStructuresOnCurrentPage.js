@@ -7,6 +7,9 @@
 /*global jQuery, mediaWiki */
 ( function ( mw, $ ) {
 'use strict';
+	if( wgDBname !== 'ptwiki' ){
+		return;
+	}
 	( new mw.Api() ).get( {
 		action: 'query',
 		titles: mw.config.get( 'wgPageName' ),
