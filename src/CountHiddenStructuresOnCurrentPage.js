@@ -8,7 +8,7 @@
 ( function ( mw, $ ) {
 'use strict';
 	function countHiddenStructures (){
-		var $table = $( 'table' ),
+		var $table = $( 'table:not(.diff)' ),
 			$links = $table.find( 'a' );
 		$table.find( 'tr:first' ).append( '<th>Usos</th>' );
 		( new mw.Api() ).get( {
@@ -55,8 +55,8 @@
 	}
  
 	if( mw.config.get( 'wgDBname' ) === 'ptwiki'
-		&& mw.config.get( 'wgAction' ) === 'view'
 		&& mw.config.get( 'wgPageName' ) === 'Wikipédia:Projetos/Padronização/hiddenStructure'
+		&& mw.config.get( 'wgAction' ) === 'view'
 	){
 		mw.loader.using( 'mediawiki.api', countHiddenStructures );
 	}
