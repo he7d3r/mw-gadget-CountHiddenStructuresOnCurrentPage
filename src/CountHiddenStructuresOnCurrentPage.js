@@ -1,20 +1,22 @@
 /**
- * Warn about the usage of the old "hiddenStructure" class in the current page
+ * Inform the usage of the old "hiddenStructure" class in the pages listed at [[w:WP:Projetos/Padronização/hiddenStructure]]
  * @author: [[User:Helder.wiki]]
  * @tracking: [[Special:GlobalUsage/User:Helder.wiki/Tools/CountHiddenStructuresOnCurrentPage.js]] ([[File:User:Helder.wiki/Tools/CountHiddenStructuresOnCurrentPage.js]])
  */
-/*jslint browser: true, white: true, plusplus: true*/
+/*jshint browser: true, camelcase: true, curly: true, eqeqeq: true, immed: true, latedef: true, newcap: true, noarg: true, noempty: true, nonew: true, quotmark: true, undef: true, unused: true, strict: true, trailing: true, laxbreak: true, maxlen: 120, evil: true, onevar: true */
 /*global jQuery, mediaWiki */
 ( function ( mw, $ ) {
 'use strict';
+
 	function countHiddenStructures (){
-		var $table = $( 'table:not(.diff)' ),
+		var api = new mw.Api(),
+			$table = $( 'table:not(.diff)' ),
 			$links = $table.find( 'a' );
-		$table.find( 'tr:first' ).append( '<th>Usos</th>' );
-		( new mw.Api() ).get( {
+		$table.find( 'tr:first' ).append( '<th>Número de<br />hiddenStructure<br />no código</th>' );
+		api.get( {
 			action: 'query',
 			prop: 'links',
-			pllimit: 500,
+			pllimit: 'max',
 			titles: mw.config.get( 'wgPageName' ),
 			indexpageids: ''
 		} ).done( function ( data ) {
@@ -25,7 +27,7 @@
 			list = $.map( data.query.pages[ data.query.pageids[0] ].links, function( link ){
 				return link.title;
 			} );
-			processBatch = function ( data ) { 
+			processBatch = function ( data ) {
 				var i, page, count, $a, filter;
 				filter = function(){
 					return $( this ).text() === page.title;
@@ -43,7 +45,7 @@
 				}
 			};
 			for( i = 0; i < list.length; i += batchSize ){
-				( new mw.Api() ).get( {
+				api.get( {
 					action: 'query',
 					titles: list.slice( i, i + batchSize ).join( '|' ),
 					prop: 'revisions',
@@ -60,5 +62,5 @@
 	){
 		mw.loader.using( 'mediawiki.api', countHiddenStructures );
 	}
- 
+
 }( mediaWiki, jQuery ) );
