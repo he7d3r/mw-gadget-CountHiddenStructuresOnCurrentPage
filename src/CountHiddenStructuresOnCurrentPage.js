@@ -4,9 +4,9 @@
  * @license: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
  */
 ( function ( mw, $ ) {
-'use strict';
+	'use strict';
 
-	function countHiddenStructures (){
+	function countHiddenStructures() {
 		var api = new mw.Api(),
 			$table = $( 'table:not(.diff)' ),
 			$links = $table.find( 'a' );
@@ -22,17 +22,17 @@
 				processBatch,
 				reOldCode = /hiddenStructure|\{\{[Oo]cultar[ _]estrutura/,
 				batchSize = 40;
-			list = $.map( data.query.pages[ data.query.pageids[0] ].links, function( link ){
+			list = $.map( data.query.pages[ data.query.pageids[0] ].links, function ( link ) {
 				return link.title;
 			} );
 			processBatch = function ( data ) {
 				var i, page, count, $a, filter;
-				filter = function(){
+				filter = function () {
 					return $( this ).text() === page.title;
 				};
-				for( i = 0; i < data.query.pageids.length; i++ ){
+				for ( i = 0; i < data.query.pageids.length; i++ ) {
 					page = data.query.pages[ data.query.pageids[i] ];
-					if( page.missing === '' ){
+					if ( page.missing === '' ) {
 						count = 0;
 					} else {
 						count = page.revisions[0]['*']
@@ -42,7 +42,7 @@
 					$a.closest( 'tr' ).append( $( '<td>' ).text( count ) );
 				}
 			};
-			for( i = 0; i < list.length; i += batchSize ){
+			for ( i = 0; i < list.length; i += batchSize ) {
 				api.get( {
 					action: 'query',
 					titles: list.slice( i, i + batchSize ).join( '|' ),
@@ -53,11 +53,11 @@
 			}
 		} );
 	}
- 
-	if( mw.config.get( 'wgDBname' ) === 'ptwiki'
+
+	if ( mw.config.get( 'wgDBname' ) === 'ptwiki'
 		&& mw.config.get( 'wgPageName' ) === 'Wikipédia:Projetos/Padronização/hiddenStructure'
 		&& mw.config.get( 'wgAction' ) === 'view'
-	){
+	) {
 		mw.loader.using( 'mediawiki.api', countHiddenStructures );
 	}
 
